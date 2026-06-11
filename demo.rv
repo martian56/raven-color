@@ -1,0 +1,11 @@
+// Build and run: raven build demo.rv -o demo && ./demo
+import std/io { println }
+import "./lib" { Style, red, green, yellow }
+
+fun main() {
+    println(red("error: something broke"))
+    println(green("ok: all good"))
+    println(yellow("warning: careful"))
+    println(Style.new().cyan().bold().underline().apply("a styled heading"))
+    println(Style.new().white().on_magenta().apply(" badge "))
+}

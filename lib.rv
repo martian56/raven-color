@@ -1,0 +1,178 @@
+// raven-color: ANSI terminal colors and styles for Raven.
+//
+//     import "github.com/martian56/raven-color" { Style, red, bold }
+//
+//     print(red("error"))                       // a one-shot color
+//     print(Style.new().green().bold().apply("ok"))   // composed styles
+//
+// A Style collects SGR codes and wraps text with them on apply, adding the
+// reset for you. Each builder method returns a new Style, so a base style can
+// be branched without the branches stepping on each other.
+
+import std/string
+
+struct Style {
+    codes: List<Int>,
+}
+
+impl Style {
+    // An empty style. `apply` on it returns the text untouched.
+    fun new() -> Style {
+        let c: List<Int> = []
+        return Style { codes: c }
+    }
+
+    fun black(self) -> Style {
+        return self._with(30)
+    }
+
+    fun red(self) -> Style {
+        return self._with(31)
+    }
+
+    fun green(self) -> Style {
+        return self._with(32)
+    }
+
+    fun yellow(self) -> Style {
+        return self._with(33)
+    }
+
+    fun blue(self) -> Style {
+        return self._with(34)
+    }
+
+    fun magenta(self) -> Style {
+        return self._with(35)
+    }
+
+    fun cyan(self) -> Style {
+        return self._with(36)
+    }
+
+    fun white(self) -> Style {
+        return self._with(37)
+    }
+
+    fun gray(self) -> Style {
+        return self._with(90)
+    }
+
+    fun on_black(self) -> Style {
+        return self._with(40)
+    }
+
+    fun on_red(self) -> Style {
+        return self._with(41)
+    }
+
+    fun on_green(self) -> Style {
+        return self._with(42)
+    }
+
+    fun on_yellow(self) -> Style {
+        return self._with(43)
+    }
+
+    fun on_blue(self) -> Style {
+        return self._with(44)
+    }
+
+    fun on_magenta(self) -> Style {
+        return self._with(45)
+    }
+
+    fun on_cyan(self) -> Style {
+        return self._with(46)
+    }
+
+    fun on_white(self) -> Style {
+        return self._with(47)
+    }
+
+    fun bold(self) -> Style {
+        return self._with(1)
+    }
+
+    fun dim(self) -> Style {
+        return self._with(2)
+    }
+
+    fun italic(self) -> Style {
+        return self._with(3)
+    }
+
+    fun underline(self) -> Style {
+        return self._with(4)
+    }
+
+    fun reverse(self) -> Style {
+        return self._with(7)
+    }
+
+    // Wrap `text` in this style's codes and a reset. With no codes, the text is
+    // returned as is.
+    fun apply(self, text: String) -> String {
+        if self.codes.len() == 0 {
+            return text
+        }
+        return "\u{1b}[${_join(self.codes)}m${text}\u{1b}[0m"
+    }
+
+    // A copy of this style with `code` appended.
+    fun _with(self, code: Int) -> Style {
+        let out: List<Int> = []
+        let i = 0
+        while i < self.codes.len() {
+            out.push(self.codes[i])
+            i += 1
+        }
+        out.push(code)
+        return Style { codes: out }
+    }
+}
+
+fun _join(codes: List<Int>) -> String {
+    let out = ""
+    let i = 0
+    while i < codes.len() {
+        if i > 0 {
+            out = out.concat(";")
+        }
+        out = out.concat(codes[i].to_string())
+        i += 1
+    }
+    return out
+}
+
+// One-shot helpers for the common cases.
+fun red(text: String) -> String {
+    return Style.new().red().apply(text)
+}
+fun green(text: String) -> String {
+    return Style.new().green().apply(text)
+}
+fun yellow(text: String) -> String {
+    return Style.new().yellow().apply(text)
+}
+fun blue(text: String) -> String {
+    return Style.new().blue().apply(text)
+}
+fun magenta(text: String) -> String {
+    return Style.new().magenta().apply(text)
+}
+fun cyan(text: String) -> String {
+    return Style.new().cyan().apply(text)
+}
+fun gray(text: String) -> String {
+    return Style.new().gray().apply(text)
+}
+fun bold(text: String) -> String {
+    return Style.new().bold().apply(text)
+}
+fun dim(text: String) -> String {
+    return Style.new().dim().apply(text)
+}
+fun underline(text: String) -> String {
+    return Style.new().underline().apply(text)
+}

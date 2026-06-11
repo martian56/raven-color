@@ -1,0 +1,28 @@
+import std/string
+import std/test { assert_eq_str }
+import "./lib" { Style, red }
+
+fun test_plain_style_returns_text() {
+    assert_eq_str(Style.new().apply("hi"), "hi")
+}
+
+fun test_single_color() {
+    assert_eq_str(red("x"), "\u{1b}[31mx\u{1b}[0m")
+}
+
+fun test_composed_codes() {
+    assert_eq_str(Style.new().green().bold().apply("ok"), "\u{1b}[32;1mok\u{1b}[0m")
+}
+
+fun test_background() {
+    assert_eq_str(Style.new().white().on_blue().apply("hi"), "\u{1b}[37;44mhi\u{1b}[0m")
+}
+
+fun test_branching_is_independent() {
+    let base = Style.new().red()
+    let a = base.bold()
+    let b = base.underline()
+    assert_eq_str(a.apply("x"), "\u{1b}[31;1mx\u{1b}[0m")
+    assert_eq_str(b.apply("x"), "\u{1b}[31;4mx\u{1b}[0m")
+    assert_eq_str(base.apply("x"), "\u{1b}[31mx\u{1b}[0m")
+}

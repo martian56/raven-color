@@ -1,5 +1,7 @@
 # raven-color
 
+[![CI](https://github.com/martian56/raven-color/actions/workflows/ci.yml/badge.svg)](https://github.com/martian56/raven-color/actions/workflows/ci.yml)
+
 ANSI colors and text styles for terminal output. Reach for a one-shot function
 like `red("...")` when you just need a color, or compose a `Style` with the
 builder when you want more than one thing at once. It adds the reset code for
@@ -9,12 +11,12 @@ you. No dependencies.
 
 ```toml
 [dependencies]
-"github.com/martian56/raven-color" = "0.1"
+"github.com/martian56/raven-color" = "v0.1.0"
 ```
 
 ## Usage
 
-```raven
+```rust
 import "github.com/martian56/raven-color" { red, green, Style }
 
 print(red("error"))
@@ -28,7 +30,7 @@ print(Style.new().white().on_blue().apply(" badge "))
 Each builder call returns a new `Style`, so you can keep a base around and branch
 off it without the branches affecting each other:
 
-```raven
+```rust
 let heading = Style.new().bold().underline()
 print(heading.red().apply("Errors"))
 print(heading.green().apply("Passed"))

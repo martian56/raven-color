@@ -1,6 +1,6 @@
-import std/string
-import std/test { assert_eq_str }
-import "./lib" { Style, red }
+import std.string
+from std.test import assert_eq_str
+from "./lib" import Style, red
 
 fun test_plain_style_returns_text() {
     assert_eq_str(Style.new().apply("hi"), "hi")

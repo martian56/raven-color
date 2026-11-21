@@ -1,6 +1,6 @@
 // raven-color: ANSI terminal colors and styles for Raven.
 //
-//     import "github.com/martian56/raven-color" { Style, red, bold }
+//     from "github.com/martian56/raven-color" import Style, red, bold
 //
 //     print(red("error"))                       // a one-shot color
 //     print(Style.new().green().bold().apply("ok"))   // composed styles
@@ -9,17 +9,17 @@
 // reset for you. Each builder method returns a new Style, so a base style can
 // be branched without the branches stepping on each other.
 
-import std/string
+import std.string
 
-struct Style {
-    codes: List<Int>,
+class Style {
+    codes: list[int]
 }
 
 impl Style {
     // An empty style. `apply` on it returns the text untouched.
     fun new() -> Style {
-        let c: List<Int> = []
-        return Style { codes: c }
+        let c: list[int] = []
+        return Style(codes: c)
     }
 
     fun black(self) -> Style {
@@ -112,7 +112,7 @@ impl Style {
 
     // Wrap `text` in this style's codes and a reset. With no codes, the text is
     // returned as is.
-    fun apply(self, text: String) -> String {
+    fun apply(self, text: str) -> str {
         if self.codes.len() == 0 {
             return text
         }
@@ -120,21 +120,21 @@ impl Style {
     }
 
     // A copy of this style with `code` appended.
-    fun _with(self, code: Int) -> Style {
-        let out: List<Int> = []
-        let i = 0
+    fun _with(self, code: int) -> Style {
+        let out: list[int] = []
+        var i = 0
         while i < self.codes.len() {
             out.push(self.codes[i])
             i += 1
         }
         out.push(code)
-        return Style { codes: out }
+        return Style(codes: out)
     }
 }
 
-fun _join(codes: List<Int>) -> String {
-    let out = ""
-    let i = 0
+fun _join(codes: list[int]) -> str {
+    var out = ""
+    var i = 0
     while i < codes.len() {
         if i > 0 {
             out = out.concat(";")
@@ -146,33 +146,33 @@ fun _join(codes: List<Int>) -> String {
 }
 
 // One-shot helpers for the common cases.
-fun red(text: String) -> String {
+fun red(text: str) -> str {
     return Style.new().red().apply(text)
 }
-fun green(text: String) -> String {
+fun green(text: str) -> str {
     return Style.new().green().apply(text)
 }
-fun yellow(text: String) -> String {
+fun yellow(text: str) -> str {
     return Style.new().yellow().apply(text)
 }
-fun blue(text: String) -> String {
+fun blue(text: str) -> str {
     return Style.new().blue().apply(text)
 }
-fun magenta(text: String) -> String {
+fun magenta(text: str) -> str {
     return Style.new().magenta().apply(text)
 }
-fun cyan(text: String) -> String {
+fun cyan(text: str) -> str {
     return Style.new().cyan().apply(text)
 }
-fun gray(text: String) -> String {
+fun gray(text: str) -> str {
     return Style.new().gray().apply(text)
 }
-fun bold(text: String) -> String {
+fun bold(text: str) -> str {
     return Style.new().bold().apply(text)
 }
-fun dim(text: String) -> String {
+fun dim(text: str) -> str {
     return Style.new().dim().apply(text)
 }
-fun underline(text: String) -> String {
+fun underline(text: str) -> str {
     return Style.new().underline().apply(text)
 }

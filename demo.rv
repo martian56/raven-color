@@ -1,6 +1,6 @@
-// Build and run: raven build demo.rv -o demo && ./demo
-import std/io { println }
-import "./lib" { Style, red, green, yellow }
+// Build and run: raven build demo.rv -o demo and ./demo
+from std.io import println
+from "./lib" import Style, red, green, yellow
 
 fun main() {
     println(red("error: something broke"))

@@ -11,13 +11,13 @@ you. No dependencies.
 
 ```toml
 [dependencies]
-"github.com/martian56/raven-color" = "v0.1.0"
+"github.com/martian56/raven-color" = "v0.2.0"
 ```
 
 ## Usage
 
 ```rust
-import "github.com/martian56/raven-color" { red, green, Style }
+from "github.com/martian56/raven-color" import red, green, Style
 
 print(red("error"))
 print(green("ok"))

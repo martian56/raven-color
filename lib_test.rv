@@ -1,28 +1,46 @@
 import std.string
 from std.test import assert_eq_str
-from "./lib" import Style, red
+from "./lib" import Style, red, set_enabled, enabled
 
 fun test_plain_style_returns_text() {
+    set_enabled(true)
     assert_eq_str(Style.new().apply("hi"), "hi")
 }
 
 fun test_single_color() {
+    set_enabled(true)
     assert_eq_str(red("x"), "\u{1b}[31mx\u{1b}[0m")
 }
 
 fun test_composed_codes() {
+    set_enabled(true)
     assert_eq_str(Style.new().green().bold().apply("ok"), "\u{1b}[32;1mok\u{1b}[0m")
 }
 
 fun test_background() {
+    set_enabled(true)
     assert_eq_str(Style.new().white().on_blue().apply("hi"), "\u{1b}[37;44mhi\u{1b}[0m")
 }
 
 fun test_branching_is_independent() {
+    set_enabled(true)
     let base = Style.new().red()
     let a = base.bold()
     let b = base.underline()
     assert_eq_str(a.apply("x"), "\u{1b}[31;1mx\u{1b}[0m")
     assert_eq_str(b.apply("x"), "\u{1b}[31;4mx\u{1b}[0m")
     assert_eq_str(base.apply("x"), "\u{1b}[31mx\u{1b}[0m")
+}
+
+fun test_disabled_emits_plain_text() {
+    set_enabled(false)
+    assert_eq_str(red("x"), "x")
+    assert_eq_str(Style.new().bold().green().apply("ok"), "ok")
+}
+
+fun test_pipe_turns_color_off() {
+    // Tests run with stdout captured, which is not a terminal.
+    if not enabled() {
+        assert_eq_str(red("x"), "x")
+    }
 }

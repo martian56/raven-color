@@ -46,8 +46,11 @@ through `on_white`. Styles are `bold`, `dim`, `italic`, `underline`, and
 
 ## A note on terminals
 
-It always emits the escape codes. If you're writing to a file or a pipe where
-you don't want them, keep that output off this path.
+Colors switch themselves off when stdout is not a terminal (a pipe or a file)
+and when `NO_COLOR` is set, so redirected output stays clean. `FORCE_COLOR`
+turns them back on for a pipe, and `set_enabled(true)` or `set_enabled(false)`
+decides for the whole program. `enabled()` reports the current choice. This
+needs Raven 3.3.0 or newer.
 
 ## License
 

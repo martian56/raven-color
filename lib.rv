@@ -10,6 +10,32 @@
 // be branched without the branches stepping on each other.
 
 import std.string
+from std.env import get_env, has_env
+from std.io import is_terminal
+
+// 0 decides from the environment on first use, 1 forces color on, 2 off.
+var _mode = 0
+
+// Turn colors on or off for the whole program, overriding detection.
+fun set_enabled(on: bool) {
+    _mode = 1 if on else 2
+}
+
+// Whether styles emit escape codes. By default they do when stdout is a
+// terminal and `NO_COLOR` is unset; `FORCE_COLOR` turns them on for pipes.
+fun enabled() -> bool {
+    if _mode == 0 {
+        var on = is_terminal()
+        if has_env("FORCE_COLOR") {
+            on = true
+        }
+        if get_env("NO_COLOR") != "" {
+            on = false
+        }
+        _mode = 1 if on else 2
+    }
+    return _mode == 1
+}
 
 class Style {
     codes: list[int]
@@ -113,7 +139,7 @@ impl Style {
     // Wrap `text` in this style's codes and a reset. With no codes, the text is
     // returned as is.
     fun apply(self, text: str) -> str {
-        if self.codes.len() == 0 {
+        if self.codes.len() == 0 or not enabled() {
             return text
         }
         return "\u{1b}[${_join(self.codes)}m${text}\u{1b}[0m"
